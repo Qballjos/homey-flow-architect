@@ -20,6 +20,9 @@ Before suggesting any logic, the Agent must call:
 - `get_device`: To inspect the capabilities array of specific devices (e.g., does it support dim?).
 - `get_variables`: (If applicable) To check Homey Logic variables for state management.
 
+### Phase 1.1: Semantic Filtering.
+The Agent must not request "All Cards." The MCP server should implement a filter (e.g., get_cards_by_type or get_devices_by_zone) to keep the context window clean and the logic sharp.
+
 ### Phase 2: Design & Schema Generation
 The Agent must construct a JSON object for the POST `/api/manager/advanced-flow/flow` endpoint.
 - Grid Layout Logic: 
