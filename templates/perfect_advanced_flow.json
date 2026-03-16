@@ -1,0 +1,85 @@
+{
+  "name": "Evening Relaxation (AI Draft)",
+  "enabled": true,
+  "trigger": {
+    "type": "flow",
+    "cards": [
+      {
+        "id": "trigger_card_1",
+        "uri": "homey:manager:flow",
+        "action": "homey:manager:flow:trigger",
+        "args": {
+          "trigger": "evening_relax_start"
+        },
+        "delay": null,
+        "x": -400,
+        "y": 0
+      }
+    ]
+  },
+  "conditions": {
+    "type": "flow",
+    "cards": [
+      {
+        "id": "condition_card_1",
+        "uri": "homey:device:5f9b1c90-abcd-1234-efgh-567890abcdef", 
+        "action": "homey:device:5f9b1c90-abcd-1234-efgh-567890abcdef:on",
+        "args": {},
+        "delay": null,
+        "x": 0,
+        "y": 0
+      }
+    ]
+  },
+  "actions": {
+    "type": "flow",
+    "cards": [
+      {
+        "id": "action_card_1",
+        "uri": "homey:device:1a2b3c4d-5e6f-7a8b-9c0d-1e2f3a4b5c6d", 
+        "action": "homey:device:1a2b3c4d-5e6f-7a8b-9c0d-1e2f3a4b5c6d:dim",
+        "args": {
+          "dim": 0.4
+        },
+        "delay": null,
+        "x": 400,
+        "y": -100
+      },
+      {
+        "id": "action_card_2",
+        "uri": "homey:device:9f8e7d6c-5b4a-3928-1706-f5e4d3c2b1a0",
+        "action": "homey:device:9f8e7d6c-5b4a-3928-1706-f5e4d3c2b1a0:on",
+        "args": {},
+        "delay": null,
+        "x": 400,
+        "y": 100
+      }
+    ]
+  },
+  "lines": [
+    {
+      "from": {
+        "id": "trigger_card_1"
+      },
+      "to": {
+        "id": "condition_card_1"
+      }
+    },
+    {
+      "from": {
+        "id": "condition_card_1"
+      },
+      "to": {
+        "id": "action_card_1"
+      }
+    },
+    {
+      "from": {
+        "id": "condition_card_1"
+      },
+      "to": {
+        "id": "action_card_2"
+      }
+    }
+  ]
+}
