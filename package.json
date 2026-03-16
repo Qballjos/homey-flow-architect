@@ -1,0 +1,25 @@
+{
+  "name": "homey-flow-architect",
+  "version": "1.0.0",
+  "description": "Homey Flow Architect (HFA) - local-first Advanced Flows via mcp-homey",
+  "main": "src/index.js",
+  "scripts": {
+    "start": "node src/index.js",
+    "dev": "nodemon src/index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "homey",
+    "mcp",
+    "ai",
+    "automation"
+  ],
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "dotenv": "^16.4.5"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.0"
+  }
+}
