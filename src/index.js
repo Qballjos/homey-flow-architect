@@ -34,14 +34,15 @@ async function main() {
     const light = devices.find(d => d.capabilities?.includes('onoff')) || devices[0];
     const deviceId = light?.id || '5f9b1c90-abcd-1234-efgh-567890abcdef';
     
-    // 2. Design: Context-Aware Pattern Generation
-    console.log(`\n[Phase 2] Design: Generating Pattern for ${light?.name || 'Device'}...`);
-    const flowJson = patterns.createToggle(
-      `Smart Toggle: ${zone?.name || 'Room'}`,
-      `${zone?.name?.toLowerCase()}_switch_clicked`,
-      deviceId
+    // 2. Design: Context-Aware Pattern Generation (Motion Light)
+    console.log(`\n[Phase 2] Design: Generating Motion Light for ${light?.name || 'Device'}...`);
+    const flowJson = patterns.createMotionLight(
+      `Motion Light: ${zone?.name || 'Room'}`,
+      'MOTION_SENSOR_ID', // Placeholder or real ID
+      deviceId,
+      300 // 5 minute delay
     );
-    console.log(`Pattern generated: ${flowJson.name}`);
+    console.log(`Pattern generated: ${flowJson.name} (with 5m delay)`);
 
     // 3. Verification & Self-Healing
     console.log('\n[Phase 3] Verification & Self-Healing...');

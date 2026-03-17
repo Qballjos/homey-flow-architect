@@ -90,12 +90,12 @@ class Patterns {
     const offId = builder.addAction(
       `homey:device:${lightId}`,
       `homey:device:${lightId}:off`,
-      {}
+      {},
+      duration
     );
-    // Note: In real Advanced Flow, 'delay' property would be set on the card
-    // Our FlowBuilder can be extended to support this
     
     builder.connect(triggerId, actionId);
+    builder.connect(actionId, offId); // Connect On -> Off (with delay)
     return builder.build();
   }
 }

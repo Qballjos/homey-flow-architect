@@ -35,8 +35,9 @@ class FlowBuilder {
    * @param {string} uri - e.g., 'homey:manager:flow'
    * @param {string} action - e.g., 'homey:manager:flow:trigger'
    * @param {object} args - Card arguments
+   * @param {number|null} delay - Delay in seconds
    */
-  addTrigger(uri, action, args = {}) {
+  addTrigger(uri, action, args = {}, delay = null) {
     this.counters.trigger++;
     const id = `trigger_${this.counters.trigger}`;
     const card = {
@@ -44,7 +45,7 @@ class FlowBuilder {
       uri,
       action,
       args,
-      delay: null,
+      delay,
       x: this.coords.trigger.x,
       y: (this.counters.trigger - 1) * this.coords.verticalSpacing
     };
@@ -57,8 +58,9 @@ class FlowBuilder {
    * @param {string} uri - e.g., 'homey:device:DEVICE_ID'
    * @param {string} action - e.g., 'homey:device:DEVICE_ID:on'
    * @param {object} args 
+   * @param {number|null} delay
    */
-  addCondition(uri, action, args = {}) {
+  addCondition(uri, action, args = {}, delay = null) {
     this.counters.condition++;
     const id = `condition_${this.counters.condition}`;
     const card = {
@@ -66,7 +68,7 @@ class FlowBuilder {
       uri,
       action,
       args,
-      delay: null,
+      delay,
       x: this.coords.condition.x,
       y: (this.counters.condition - 1) * this.coords.verticalSpacing
     };
@@ -79,8 +81,9 @@ class FlowBuilder {
    * @param {string} uri 
    * @param {string} action 
    * @param {object} args 
+   * @param {number|null} delay
    */
-  addAction(uri, action, args = {}) {
+  addAction(uri, action, args = {}, delay = null) {
     this.counters.action++;
     const id = `action_${this.counters.action}`;
     const card = {
@@ -88,7 +91,7 @@ class FlowBuilder {
       uri,
       action,
       args,
-      delay: null,
+      delay,
       x: this.coords.action.x,
       y: (this.counters.action - 1) * this.coords.verticalSpacing
     };
