@@ -15,20 +15,30 @@ async function main() {
   console.log('--- Homey Flow Architect (HFA) ---');
   
   try {
-    // 1. Discovery
-    console.log('\n[Phase 1] Discovery...');
-    const zones = await discovery.list_zones();
-    console.log('Homes and Zones mapped.');
+    // 1. Discovery: Hierarchical Map
+    console.log('\n[Phase 1] Hierarchical Discovery...');
+    const zonesResult = await discovery.list_zones();
+    const zones = zonesResult.content || [];
+    console.log(`Mapped ${zones.length} zones/rooms.`);
 
-    const devicesResult = await discovery.list_devices();
+    // Find a target zone (e.g., 'Woonkamer' or 'Living Room')
+    const targetZoneName = 'Woonkamer'; // Adjust as needed
+    const zone = zones.find(z => z.name === targetZoneName) || zones[0];
+    console.log(`Targeting Zone: ${zone?.name || 'Default'}`);
+
+    // Discover devices in that zone
+    const devicesResult = await discovery.get_devices_by_zone(zone?.id);
     const devices = devicesResult.content || [];
-    const deviceId = devices[0]?.id || '5f9b1c90-abcd-1234-efgh-567890abcdef';
+    console.log(`Found ${devices.length} devices in ${zone?.name}.`);
+
+    const light = devices.find(d => d.capabilities?.includes('onoff')) || devices[0];
+    const deviceId = light?.id || '5f9b1c90-abcd-1234-efgh-567890abcdef';
     
-    // 2. Design: Using high-level Patterns
-    console.log('\n[Phase 2] Design: Using Automation Patterns...');
+    // 2. Design: Context-Aware Pattern Generation
+    console.log(`\n[Phase 2] Design: Generating Pattern for ${light?.name || 'Device'}...`);
     const flowJson = patterns.createToggle(
-      "Smart Toggle: Living Room",
-      "wall_switch_clicked",
+      `Smart Toggle: ${zone?.name || 'Room'}`,
+      `${zone?.name?.toLowerCase()}_switch_clicked`,
       deviceId
     );
     console.log(`Pattern generated: ${flowJson.name}`);
