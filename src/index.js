@@ -9,6 +9,7 @@ const discovery = require('./api/discovery');
 const FlowBuilder = require('./api/flowBuilder');
 const validator = require('./api/validator');
 const deployment = require('./api/deployment');
+const patterns = require('./api/patterns');
 
 async function main() {
   console.log('--- Homey Flow Architect (HFA) ---');
@@ -16,42 +17,21 @@ async function main() {
   try {
     // 1. Discovery
     console.log('\n[Phase 1] Discovery...');
+    const zones = await discovery.list_zones();
+    console.log('Homes and Zones mapped.');
+
     const devicesResult = await discovery.list_devices();
     const devices = devicesResult.content || [];
-    console.log(`Found ${devices.length} devices.`);
-
-    // Pick a dummy device if none found for demo purposes
     const deviceId = devices[0]?.id || '5f9b1c90-abcd-1234-efgh-567890abcdef';
     
-    // 2. Design: "Remote Control" Automation
-    console.log('\n[Phase 2] Design: Remote Control Automation...');
-    const builder = new FlowBuilder("Remote Control: Living Room Lights");
-    
-    // Trigger when a button is pressed
-    const triggerId = builder.addTrigger(
-      "homey:manager:flow", 
-      "homey:manager:flow:trigger", 
-      { trigger: "remote_button_1" }
+    // 2. Design: Using high-level Patterns
+    console.log('\n[Phase 2] Design: Using Automation Patterns...');
+    const flowJson = patterns.createToggle(
+      "Smart Toggle: Living Room",
+      "wall_switch_clicked",
+      deviceId
     );
-    
-    // Condition: Check if light is currently off
-    const conditionId = builder.addCondition(
-      `homey:device:${deviceId}`,
-      `homey:device:${deviceId}:condition_is_off`
-    );
-
-    // Action: Turn light on
-    const actionId = builder.addAction(
-      `homey:device:${deviceId}`,
-      `homey:device:${deviceId}:on`
-    );
-
-    // Connect them: Trigger -> Condition -> Action
-    builder.connect(triggerId, conditionId);
-    builder.connect(conditionId, actionId);
-    
-    let flowJson = builder.build();
-    console.log('Remote Control Flow JSON constructed.');
+    console.log(`Pattern generated: ${flowJson.name}`);
 
     // 3. Verification & Self-Healing
     console.log('\n[Phase 3] Verification & Self-Healing...');

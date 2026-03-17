@@ -99,23 +99,43 @@ class Validator {
    * Verifies that target devices support the requested capabilities
    */
   async validateCapabilities(flow, results) {
-    const devicesToCheck = new Set();
+    const devicesToCheck = new Map();
+    const capabilityMapping = {
+      'on': 'onoff',
+      'off': 'onoff',
+      'dim': 'dim',
+      'condition_is_on': 'onoff',
+      'condition_is_off': 'onoff'
+    };
+
     [...flow.conditions.cards, ...flow.actions.cards].forEach(card => {
       if (card.uri.startsWith('homey:device:')) {
         const deviceId = card.uri.split(':')[2];
-        devicesToCheck.add(deviceId);
+        const action = card.action.split(':').pop();
+        
+        if (!devicesToCheck.has(deviceId)) {
+          devicesToCheck.set(deviceId, []);
+        }
+        devicesToCheck.get(deviceId).push({ id: card.id, action });
       }
     });
 
-    for (const deviceId of devicesToCheck) {
+    for (const [deviceId, cards] of devicesToCheck) {
       try {
         const device = await get_device(deviceId);
-        // Note: Actual capability matching depends on the specific tool action string 
-        // and the device's capabilities array. This is a simplified placeholder
-        // that ensures the device exists. 
         if (!device) {
           results.errors.push(`Device not found: ${deviceId}`);
+          continue;
         }
+
+        const deviceCapabilities = device.capabilities || [];
+        
+        cards.forEach(({ id, action }) => {
+          const requiredCapability = capabilityMapping[action];
+          if (requiredCapability && !deviceCapabilities.includes(requiredCapability)) {
+            results.errors.push(`Capability mismatch: Card '${id}' requires '${requiredCapability}' but device '${deviceId}' does not support it.`);
+          }
+        });
       } catch (error) {
         results.errors.push(`Failed to verify device ${deviceId}: ${error.message}`);
       }
